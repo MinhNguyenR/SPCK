@@ -1,52 +1,58 @@
 import React, { useContext, useState } from 'react';
-import { Layout, Card, Input, Button, Typography, Form } from 'antd';
-import { UserOutlined, LockOutlined, ArrowLeftOutlined } from '@ant-design/icons';
+import { Layout, Input, Button, Form, message } from 'antd'; 
+import { MailOutlined, LockOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { ThemeContext } from '../Setting/Setting';
+import { AuthContext } from '../contexts/AuthContext'; 
 
 const { Content } = Layout;
-const { Title, Text } = Typography;
 
 function DangNhap() {
   const { theme } = useContext(ThemeContext);
+  const { login } = useContext(AuthContext); 
   const navigate = useNavigate();
-  const [form] = Form.useForm();
+  const [loading, setLoading] = useState(false);
 
-  const onFinish = (values) => {
-    console.log('Received values of form: ', values);
-    navigate('/');
-  };
+const onFinish = async (values) => {
+  console.log('--- Đăng nhập: Form đã được gửi ---'); 
+  console.log('Giá trị nhập vào:', values); 
+  setLoading(true);
+  const { email, password } = values;
+  const result = await login(email, password); 
+  setLoading(false);
 
-  const handleGoBack = () => {
-    navigate('/');
-  };
+  if (result.success) {
+    message.success('Đăng nhập thành công! Đang chuyển hướng...');
+    navigate('/home');
+  } else {
+    message.error(result.message || 'Đăng nhập thất bại!');
+  }
+};
 
   return (
     <Layout className="min-h-screen flex items-center justify-center" style={{ backgroundColor: theme.colors.background }}>
-      <Content className="p-6 w-full max-w-md flex items-center justify-center">
-        <Card
-          className="shadow-lg rounded-lg w-full"
-          style={{ backgroundColor: theme.colors.siderBackground, color: theme.colors.text }}
+      <Content className="p-6">
+        <div
+          className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full"
+          style={{ backgroundColor: theme.colors.containerBackground, color: theme.colors.text }}
         >
-          <Title level={2} className="text-center mb-6" style={{ color: theme.colors.primary }}>
-            Đăng nhập
-          </Title>
-
+          <h2 className="text-3xl font-bold text-center mb-6" style={{ color: theme.colors.primary }}>
+            Đăng Nhập
+          </h2>
           <Form
-            form={form}
             name="login"
             initialValues={{ remember: true }}
             onFinish={onFinish}
-            className="login-form"
+            autoComplete="off"
           >
             <Form.Item
-              name="username"
-              rules={[{ required: true, message: 'Vui lòng nhập tên đăng nhập!' }]}
+              name="email"
+              rules={[{ required: true, message: 'Vui lòng nhập email!' }, { type: 'email', message: 'Email không hợp lệ!' }]}
             >
               <Input
-                prefix={<UserOutlined style={{ color: theme.colors.text + '80' }} />}
-                placeholder="Tên đăng nhập"
-                style={{ backgroundColor: theme.colors.background, color: theme.colors.text }}
+                prefix={<MailOutlined style={{ color: theme.colors.text }} />}
+                placeholder="Email"
+                style={{ backgroundColor: theme.colors.inputBackground, color: theme.colors.text }}
               />
             </Form.Item>
 
@@ -55,9 +61,9 @@ function DangNhap() {
               rules={[{ required: true, message: 'Vui lòng nhập mật khẩu!' }]}
             >
               <Input.Password
-                prefix={<LockOutlined style={{ color: theme.colors.text + '80' }} />}
+                prefix={<LockOutlined style={{ color: theme.colors.text }} />}
                 placeholder="Mật khẩu"
-                style={{ backgroundColor: theme.colors.background, color: theme.colors.text }}
+                style={{ backgroundColor: theme.colors.inputBackground, color: theme.colors.text }}
               />
             </Form.Item>
 
@@ -66,32 +72,18 @@ function DangNhap() {
                 type="primary"
                 htmlType="submit"
                 className="w-full"
-                size="large"
+                loading={loading}
                 style={{ backgroundColor: theme.colors.primary, borderColor: theme.colors.primary }}
               >
-                Đăng nhập
+                Đăng Nhập
               </Button>
             </Form.Item>
           </Form>
-
           <div className="text-center mt-4">
-            <Text style={{ color: theme.colors.text }}>Chưa có tài khoản?</Text>{' '}
-            <Link to="/register" style={{ color: theme.colors.primary }}>
-              Đăng ký ngay!
-            </Link>
+            <span style={{ color: theme.colors.text }}>Chưa có tài khoản? </span>
+            <Link to="/register" style={{ color: theme.colors.primary }}>Đăng ký ngay</Link>
           </div>
-
-          <div className="text-center mt-6">
-            <Button
-              type="default"
-              icon={<ArrowLeftOutlined />}
-              onClick={handleGoBack}
-              style={{ color: theme.colors.primary, borderColor: theme.colors.primary }}
-            >
-              Quay lại Trang chủ
-            </Button>
-          </div>
-        </Card>
+        </div>
       </Content>
     </Layout>
   );

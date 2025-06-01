@@ -5,10 +5,10 @@ import {
     SettingOutlined,
     UsergroupAddOutlined,
     ShopOutlined,
+    BellOutlined,
     PictureOutlined,
     TagOutlined,
-    BellOutlined, 
-    MessageOutlined 
+    MessageOutlined, 
 } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../ChucNang/Navbar';
@@ -17,7 +17,7 @@ import { ThemeContext } from '../Setting/Setting';
 const { Content, Sider } = Layout;
 const { Search } = Input;
 
-function TrangChu() {
+function TrangChuDN() {
     const { theme } = useContext(ThemeContext);
     const navigate = useNavigate();
 
@@ -82,7 +82,6 @@ function TrangChu() {
                         className="custom-menu-styles"
                     />
                 </Sider>
-
                 <Content className="p-6" style={{ backgroundColor: theme.colors.background }}>
                     <div className="max-w-3xl mx-auto">
                         <Card
@@ -98,7 +97,7 @@ function TrangChu() {
                                 <Avatar icon={<UserOutlined />} style={{ backgroundColor: theme.colors.primary, boxShadow: 'none' }} />
                                 <div
                                     className="flex-1 cursor-pointer p-3 rounded-lg hover:bg-opacity-10 transition-colors duration-200 ease-in-out"
-                                    onClick={handleCreatePostClick}
+                                    onClick={() => navigate('/create-post')}
                                     style={{
                                         backgroundColor: theme.colors.background,
                                         color: theme.colors.text + '80',
@@ -116,7 +115,7 @@ function TrangChu() {
                                 <Button
                                     type="text"
                                     icon={<PictureOutlined style={{ fontSize: '20px', color: theme.colors.primary }} />}
-                                    onClick={handleCreatePostClick}
+                                    onClick={() => navigate('/create-post')}
                                     style={{ color: theme.colors.text }}
                                     className="hover:bg-opacity-10 rounded-lg transition-all duration-200 ease-in-out transform hover:scale-[1.01]"
                                 >
@@ -125,7 +124,7 @@ function TrangChu() {
                                 <Button
                                     type="text"
                                     icon={<TagOutlined style={{ fontSize: '20px', color: theme.colors.primary }} />}
-                                    onClick={handleCreatePostClick}
+                                    onClick={() => navigate('/create-post')}
                                     style={{ color: theme.colors.text }}
                                     className="hover:bg-opacity-10 rounded-lg transition-all duration-200 ease-in-out transform hover:scale-[1.01]"
                                 >
@@ -197,7 +196,6 @@ function TrangChu() {
                             </div>
                         </div>
                     </Card>
-
                     <Card
                         title={<span style={{ color: theme.colors.text }}>Gợi ý kết bạn</span>}
                         className="mb-4 transition-all duration-300 ease-out hover:shadow-lg transform hover:scale-[1.01]"
@@ -233,4 +231,4 @@ function TrangChu() {
     );
 }
 
-export default TrangChu;
+export default TrangChuDN;
